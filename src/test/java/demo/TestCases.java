@@ -193,20 +193,20 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
         public void testCase04() throws InterruptedException {
                 System.out.println("=============TestCase04 Starts=============");
                 Wrappers wrapper = new Wrappers(driver);
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
                 WebElement sideButton = driver.findElement(By.xpath("//button[@aria-label='Guide']"));
 
                 // //a[@title='Movies']
                 List<WebElement> newsList = driver.findElements(By.xpath("//a[@title='News']"));
+                By showMoreBy = By.xpath("//yt-formatted-string[text()='Show more']");
+                List<WebElement> showMoreList = driver.findElements(showMoreBy);
+                System.out.println(newsList.size());
+                System.out.println(newsList);
                 pause(3000);
-                if (newsList.isEmpty()) {
+                if (newsList.isEmpty() && showMoreList.isEmpty()) {
                         wrapper.click(sideButton);
 
-                }
-                By showMoreBy = By.xpath("//yt-formatted-string[text()='Show more']");
-
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-                List<WebElement> showMoreList = driver.findElements(showMoreBy);
+                }   
 
                 if (!showMoreList.isEmpty()) {
                         WebElement showMore = wait.until(ExpectedConditions.elementToBeClickable(showMoreBy));
