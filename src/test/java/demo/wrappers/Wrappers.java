@@ -62,7 +62,7 @@ public class Wrappers {
         pause(3000);
 
         WebElement movieType = lastMovie.findElement(By.xpath(".//span[contains(@class,'renderer-metadata')]"));
-        WebElement ageType = lastMovie.findElement(By.xpath("*[contains(@class,'badges style')]//div[2]//div"));
+        WebElement ageType = lastMovie.findElement(By.xpath(".//ytd-badge-supported-renderer[contains(@class,'badges style')]//div[2]//div")); // ===> child 2
 
         String typeText1 = movieType.getText().trim();
         String typeText = typeText1.split(" ")[0];

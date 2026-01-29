@@ -119,7 +119,7 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
 
                 // //button[@aria-label='Next']
                 WebElement next = wait.until(
-                                ExpectedConditions.elementToBeClickable(By.xpath("//button[@aria-label='Next']")));
+                                ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(.,'Top selling')]//ancestor::ytd-shelf-renderer//ytd-button-renderer//button[@aria-label='Next']")));
 
                 while (next.isDisplayed()) {
                         wrapper.click(next);
