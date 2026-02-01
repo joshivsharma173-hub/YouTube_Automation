@@ -85,6 +85,9 @@ public class Wrappers {
                         String body = elems.isEmpty() ? "" : elems.get(0).getText().trim();
                         //String body = parentEle.findElement(By.xpath(".//div[@id='post-text']//yt-formatted-string[@id='home-content-text']//span[1]")).getText().trim();
                         String likeCount= parentEle.findElement(By.xpath(".//span[@id='vote-count-middle']")).getText().trim();
+                        if(likeCount.isEmpty()){
+                            likeCount="0";
+                        }
                         System.out.println(author +"====>" + body + "====>" + likeCount);
                         num = num + numericalValue(likeCount);
                         

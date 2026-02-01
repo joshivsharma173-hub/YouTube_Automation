@@ -4,9 +4,9 @@
     <test name = "Test Cases for Buildout">
        <classes>          
             <class name="demo.TestCases">
-                <!-- <methods>
+                <methods>
                     <include name="testCase04" />
-                </methods> -->
+                </methods>
             </class>
         </classes>
     </test>
