@@ -13,11 +13,7 @@ apply plugin: 'checkstyle'
 group 'org.example'
 version '1.0-SNAPSHOT'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
-    }
-}
+
 tasks.withType(Test) {
     systemProperty "file.encoding", "UTF-8"
 }
