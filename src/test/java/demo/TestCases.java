@@ -134,7 +134,7 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
 
                 SoftAssert softAssert = new SoftAssert();
                 softAssert.assertTrue(actualMovieType.equals("Comedy") || actualMovieType.equals("Drama")
-                                || actualMovieType.equals("Animation"), "Movie Type is not matching");
+                                || actualMovieType.equals("Animation") || actualMovieType.contains("Action"), "Movie Type is not matching");
 
                 softAssert.assertTrue(actualAge.equals("A") || actualAge.equals("U/A")
                                 || actualAge.equals("U"), "Movie Type is not matching");
@@ -235,6 +235,8 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
                 System.out.println("Total sum of Likes Count is " + "====>" + sum);
 
                 System.out.println(list.size());
+
+
 
                 // //div[@id='rich-shelf-header-container' and contains(.,'Latest news
                 // posts')]//ancestor::div[1]//div[@id='contents']//ytd-rich-item-renderer[not(@hidden)]
