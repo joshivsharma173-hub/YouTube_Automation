@@ -48,6 +48,7 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
 
                 ChromeOptions options = new ChromeOptions();
                 LoggingPreferences logs = new LoggingPreferences();
+                options.setBinary("C:\\Users\\91857\\Desktop\\Automation Projects\\Chrome versions\\chrome-win64\\chrome.exe");
 
                 logs.enable(LogType.BROWSER, Level.ALL);
                 logs.enable(LogType.DRIVER, Level.ALL);
@@ -119,7 +120,8 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
 
                 // //button[@aria-label='Next']
                 WebElement next = wait.until(
-                                ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(.,'Top selling')]//ancestor::ytd-shelf-renderer//ytd-button-renderer//button[@aria-label='Next']")));
+                                ExpectedConditions.elementToBeClickable(By.xpath(
+                                                "//span[contains(.,'Top selling')]//ancestor::ytd-shelf-renderer//ytd-button-renderer//button[@aria-label='Next']")));
 
                 while (next.isDisplayed()) {
                         wrapper.click(next);
@@ -134,7 +136,8 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
 
                 SoftAssert softAssert = new SoftAssert();
                 softAssert.assertTrue(actualMovieType.equals("Comedy") || actualMovieType.equals("Drama")
-                                || actualMovieType.equals("Animation") || actualMovieType.contains("Action"), "Movie Type is not matching");
+                                || actualMovieType.equals("Animation") || actualMovieType.contains("Action"),
+                                "Movie Type is not matching");
 
                 softAssert.assertTrue(actualAge.equals("A") || actualAge.equals("U/A")
                                 || actualAge.equals("U"), "Movie Type is not matching");
@@ -156,11 +159,13 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
                 System.out.println("=============TestCase03 Starts=============");
                 Wrappers wrapper = new Wrappers(driver);
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-                WebElement sideButton = driver.findElement(By.xpath("//button[@aria-label='Guide']"));
+                WebElement sideButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[@aria-label='Guide']")));
+                //driver.findElement(By.xpath("//button[@aria-label='Guide']"));
                 pause(3000);
-                List<WebElement> musicList = driver.findElements(By.xpath("//a[@title='Music']"));
+                 List<WebElement> musicList = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//a[@title='Music']")));
                 if (musicList.isEmpty()) {
                         wrapper.click(sideButton);
+                        System.out.println("SideBar menu was close and we click on it");
                 }
                 WebElement music = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@title='Music']")));
                 wrapper.click(music);
@@ -168,13 +173,21 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
                 wait.until(ExpectedConditions.urlContains("channel"));
 
                 WebElement parentEle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-                                "(//ytd-rich-shelf-renderer)[1]//ytd-rich-item-renderer[not(@hidden)][last()]")));
+                                "//ytd-rich-section-renderer[1]//ytd-rich-item-renderer[not(@hidden)][last()]")));
+                pause(5000);
                 WebElement childSongNum = parentEle.findElement(By.xpath(".//div[@class='yt-badge-shape__text']"));
 
                 WebElement childSongTitle = parentEle.findElement(By.xpath(".//h3//span"));
                 String numText = childSongNum.getText().trim().split(" ")[0];
                 String titleText = childSongTitle.getText();
-                int num = Integer.parseInt(numText);
+                System.out.println("========> " + titleText + "  " + numText);
+                int num =0;
+                if(numText!=" "){
+                        System.out.println(numText);
+                     num = Integer.parseInt(numText);
+                }
+
+                
                 System.out.println(num + "====>" + titleText);
 
                 SoftAssert softAssert = new SoftAssert();
@@ -194,7 +207,7 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
                 System.out.println("=============TestCase04 Starts=============");
                 Wrappers wrapper = new Wrappers(driver);
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-                WebElement sideButton = driver.findElement(By.xpath("//button[@aria-label='Guide']"));
+                WebElement sideButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[@aria-label='Guide']")));
 
                 // //a[@title='Movies']
                 List<WebElement> newsList = driver.findElements(By.xpath("//a[@title='News']"));
@@ -204,15 +217,17 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
                 System.out.println(newsList);
                 pause(3000);
                 if (newsList.isEmpty() && showMoreList.isEmpty()) {
+                        System.out.println("SideBar menu button click");
                         wrapper.click(sideButton);
 
-                }   
+                }
 
                 if (!showMoreList.isEmpty()) {
                         WebElement showMore = wait.until(ExpectedConditions.elementToBeClickable(showMoreBy));
                         showMore.click();
+                        System.out.println("Show more button click");
                 }
-                System.out.println(showMoreList);
+                //System.out.println(showMoreList);
                 // if (driver.findElement(By.xpath("//yt-formatted-string[text()='Show
                 // more']")).isDisplayed()) {
                 // driver.findElement(By.xpath("//yt-formatted-string[text()='Show
@@ -225,20 +240,26 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
                 wrapper.click(news);
 
                 wait.until(ExpectedConditions.urlContains("channel"));
-
-                List<WebElement> list = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(
+                
+                wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy( By.xpath(
                                 "//div[@id='rich-shelf-header-container' and contains(.,'Latest news posts')]//ancestor::div[1]//div[@id='contents']//ytd-rich-item-renderer[not(@hidden)]")));
 
-                pause(3000);
 
-                double sum = wrapper.getNewsHeadingAndSum(list);
-                System.out.println("Total sum of Likes Count is " + "====>" + sum);
-
-                System.out.println(list.size());
-
-
+               
+                By newsCards = By.xpath(
+                                "//div[@id='rich-shelf-header-container' and contains(.,'Latest news posts')]//ancestor::div[1]//div[@id='contents']//ytd-rich-item-renderer[not(@hidden)]");
 
                 
+                // List<WebElement> list = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(
+                //                 "//div[@id='rich-shelf-header-container' and contains(.,'Latest news posts')]//ancestor::div[1]//div[@id='contents']//ytd-rich-item-renderer[not(@hidden)]")));
+                // System.out.println("Debugging statement " + list.size());
+                pause(3000);
+
+                double sum = wrapper.getNewsHeadingAndSum(newsCards);
+                System.out.println("Total sum of Likes Count is " + "====>" + sum);
+
+                // System.out.println(list.size());
+
                 // //div[@id='rich-shelf-header-container' and contains(.,'Latest news
                 // posts')]//ancestor::div[1]//div[@id='contents']//ytd-rich-item-renderer[not(@hidden)]
                 // ====> List of News
@@ -250,4 +271,20 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
                 System.out.println("=============TestCase04 Ends===============");
 
         }
+
+
+        @Test(dataProvider ="excelData" , dataProviderClass = ExcelDataProvider.class )
+        public void youtubeTest(String searchText , String expectedTitle) throws InterruptedException{
+                pause(5000);
+                WebElement searchBox = driver.findElement(By.xpath("//input[@placeholder='Search']"));
+                searchBox.sendKeys(searchText);
+                SoftAssert softAssert = new SoftAssert();
+
+                softAssert.assertEquals(searchText, expectedTitle,"They are not matching");
+                softAssert.assertAll();
+                // System.out.println("Search Text: " + searchText);
+                // System.out.println("Expected Title: " + expectedTitle);
+                // title-wrapper
+        }
+
 }

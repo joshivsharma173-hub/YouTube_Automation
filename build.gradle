@@ -13,6 +13,13 @@ apply plugin: 'checkstyle'
 group 'org.example'
 version '1.0-SNAPSHOT'
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+
 
 tasks.withType(Test) {
     systemProperty "file.encoding", "UTF-8"
@@ -29,6 +36,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
     implementation 'org.seleniumhq.selenium:selenium-java:4.21.0'
+    
     implementation 'org.apache.poi:poi-ooxml:4.1.2'
 
 }

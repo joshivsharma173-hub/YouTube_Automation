@@ -77,23 +77,43 @@ public class Wrappers {
         return movieList;
     }
 
-    public double getNewsHeadingAndSum(List<WebElement> list){
-        double num =0;
-        for(WebElement parentEle : list){
-                        String author = parentEle.findElement(By.xpath(".//div[@id='author']")).getText().trim();
-                        List<WebElement> elems = parentEle.findElements(By.xpath(".//div[@id='post-text']//yt-formatted-string[@id='home-content-text']//span[1]"));
-                        String body = elems.isEmpty() ? "" : elems.get(0).getText().trim();
-                        //String body = parentEle.findElement(By.xpath(".//div[@id='post-text']//yt-formatted-string[@id='home-content-text']//span[1]")).getText().trim();
-                        String likeCount= parentEle.findElement(By.xpath(".//span[@id='vote-count-middle']")).getText().trim();
-                        if(likeCount.isEmpty()){
-                            likeCount="0";
-                        }
-                        System.out.println(author +"====>" + body + "====>" + likeCount);
-                        num = num + numericalValue(likeCount);
-                        
-    }
-    return num;
+public double getNewsHeadingAndSum(By newsCards) throws InterruptedException{
 
+    double num = 0;
+
+    //WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+    int size = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(newsCards)).size();
+
+    for(int i = 0; i < size; i++){
+
+        List<WebElement> freshList =
+                wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(newsCards));
+
+        WebElement parentEle = freshList.get(i);
+        pause(3000);
+
+        String author = parentEle.findElement(By.xpath(".//div[@id='author']")).getText().trim();
+        //System.out.println(author);
+
+        List<WebElement> elems = parentEle.findElements(By.xpath(
+                ".//div[@id='post-text']//yt-formatted-string[@id='home-content-text']//span[1]"
+        ));
+
+        String body = elems.isEmpty() ? "" : elems.get(0).getText().trim();
+
+        String likeCount = parentEle.findElement(By.xpath(".//span[@id='vote-count-middle']")).getText().trim();
+
+        if(likeCount.isEmpty()){
+            likeCount = "0";
+        }
+
+        System.out.println(author + "====>" + body + "====>" + likeCount);
+
+        num += numericalValue(likeCount);
+    }
+
+    return num;
 }
 
     public double numericalValue(String likeCount){

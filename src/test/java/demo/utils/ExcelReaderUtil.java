@@ -12,38 +12,63 @@ import java.util.List;
 
 public class ExcelReaderUtil {
 
-    public static Object[][] readExcelData(String fileName) {
-        try {
-            System.out.println("Reading data");
-            InputStream file = new DataInputStream(new FileInputStream(fileName));
-            Workbook workbook = new XSSFWorkbook(file);
-            Sheet sheet = workbook.getSheetAt(0); // read the first sheet
+   public static Object[][] readExcelData(String fileName, String sheetName) {
 
-            List<Object[]> records = new ArrayList<>();
-            int rowNum = sheet.getFirstRowNum() + 1; // Skip the header row
-            int totalRows = findLastNonBlankRow(sheet);
+    try {
+        System.out.println("=== START Excel Reading ===");
 
-            for (int i = rowNum; i <= totalRows; i++) {
-                Row row = sheet.getRow(i);
-                List<Object> columns = new ArrayList<>();
-                
-                // for (int j = row.getFirstCellNum(); j < findLastNonBlankColumn(row); j++) {
-                Cell cell = row.getCell(0);
-                columns.add(getCellValue(cell));
-                // }
-                
-                records.add(columns.toArray());
-            }
+        InputStream file = Thread.currentThread()
+                .getContextClassLoader()
+                .getResourceAsStream(fileName);
 
-            workbook.close();
-            System.out.println("Here is the data: "+records.toString());
-            return records.toArray(new Object[0][]);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        if (file == null) {
+            throw new RuntimeException(" Excel file NOT found in classpath: " + fileName);
         }
+
+        Workbook workbook = new XSSFWorkbook(file);
+
+        Sheet sheet = workbook.getSheet(sheetName);
+
+        if (sheet == null) {
+            throw new RuntimeException(" Sheet NOT found: " + sheetName);
+        }
+
+        int totalRows = sheet.getPhysicalNumberOfRows();
+        int totalCols = sheet.getRow(0).getPhysicalNumberOfCells();
+
+        System.out.println("Rows Found: " + totalRows);
+        System.out.println("Cols Found: " + totalCols);
+
+        if (totalRows <= 1) {
+            throw new RuntimeException(" No data rows present in Excel!");
+        }
+
+        Object[][] data = new Object[totalRows - 1][totalCols];
+
+        DataFormatter formatter = new DataFormatter();
+
+        for (int i = 1; i < totalRows; i++) {
+            Row row = sheet.getRow(i);
+
+            for (int j = 0; j < totalCols; j++) {
+                Cell cell = row.getCell(j);
+                data[i - 1][j] = formatter.formatCellValue(cell);
+
+                System.out.println("Read Data: " + data[i - 1][j]);
+            }
+        }
+
+        workbook.close();
+
+        System.out.println("=== Excel Reading Completed ===");
+
+        return data;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Excel Read Failed");
     }
+}
     // Find the last non-blank row in a sheet
     public static int findLastNonBlankRow(Sheet sheet) {
         int lastNonBlankRowNum = -1;
