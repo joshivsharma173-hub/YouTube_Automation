@@ -168,7 +168,7 @@ public class TestCases extends ExcelDataProvider { // Lets us read the data
                 wait.until(ExpectedConditions.urlContains("channel"));
 
                 WebElement parentEle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(
-                                "(//ytd-rich-shelf-renderer)[1]//ytd-rich-item-renderer[not(@hidden)][last()]")));
+                                "(//ytd-rich-section-renderer[1]//ytd-rich-item-renderer[not(@hidden)][last()]")));
                 WebElement childSongNum = parentEle.findElement(By.xpath(".//div[@class='yt-badge-shape__text']"));
 
                 WebElement childSongTitle = parentEle.findElement(By.xpath(".//h3//span"));
